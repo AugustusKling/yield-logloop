@@ -20,6 +20,7 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.log4j.Logger;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.HashPrefixStatementRewriter;
 
@@ -120,12 +121,19 @@ public class LogloopOutput extends BaseControlQueueProvider implements
 			}
 		}
 		// Queue as log event.
-		String time = e.get("time");
+		String time = e.get("timestamp");
 		Timestamp timestamp;
 		if (time == null) {
 			timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		} else {
-			timestamp = new Timestamp(Long.parseLong(time));
+			try {
+				timestamp = new Timestamp(Long.parseLong(time));
+			} catch (Exception e2) {
+				Logger.getLogger(getClass()).error("Failed to read timestamp",
+						e2);
+				timestamp = new Timestamp(Calendar.getInstance()
+						.getTimeInMillis());
+			}
 		}
 		Event event = new Event(UUID.randomUUID(), timestamp, e.get("message"),
 				fields, retention);
