@@ -3,6 +3,7 @@ package yield.logloop.function;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import yield.config.ConfigReader;
 import yield.config.FunctionConfig;
@@ -54,5 +55,11 @@ public class LogloopOutput extends FunctionConfig {
 				ConfigReader.LAST_SOURCE, context);
 		input.bind(output);
 		return context.get(ConfigReader.LAST_SOURCE);
+	}
+
+	@Override
+	@Nullable
+	public <Parameter extends Enum<Parameter> & Param> Class<? extends Param> getParameters() {
+		return Parameters.class;
 	}
 }
