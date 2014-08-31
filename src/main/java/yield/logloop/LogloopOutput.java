@@ -20,7 +20,8 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.HashPrefixStatementRewriter;
 
@@ -32,6 +33,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class LogloopOutput extends BaseControlQueueProvider implements
 		EventListener<JsonEvent> {
+	private static final Logger logger = LogManager
+			.getLogger(LogloopOutput.class);
+
 	static {
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -129,8 +133,7 @@ public class LogloopOutput extends BaseControlQueueProvider implements
 			try {
 				timestamp = new Timestamp(Long.parseLong(time));
 			} catch (Exception e2) {
-				Logger.getLogger(getClass()).error("Failed to read timestamp",
-						e2);
+				logger.error("Failed to read timestamp", e2);
 				timestamp = new Timestamp(Calendar.getInstance()
 						.getTimeInMillis());
 			}

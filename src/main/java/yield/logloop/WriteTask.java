@@ -4,7 +4,8 @@ import java.util.Queue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.skife.jdbi.v2.DBI;
 
 /**
@@ -14,7 +15,7 @@ public class WriteTask implements Runnable {
 	private Queue<Event> events;
 	private DBI dbi;
 	private ScheduledExecutorService indexers;
-	private static Logger logger = Logger.getLogger(WriteTask.class);
+	private static Logger logger = LogManager.getLogger(WriteTask.class);
 
 	public WriteTask(Queue<Event> events, DBI dbi,
 			ScheduledExecutorService indexers) {
