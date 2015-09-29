@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.TransactionCallback;
@@ -20,6 +22,8 @@ import yield.logloop.jdbi.SyntaxErrorOrAccessRuleViolation.UndefinedTableExcepti
  * relation. The child relations are automatically created upon first use.
  */
 public class Event {
+	private static final Logger logger = LogManager.getLogger(Event.class);
+
 	public final Timestamp timestamp;
 	public final String message;
 	public final Map<String, String> fields;
@@ -91,6 +95,8 @@ public class Event {
 			public Void inTransaction(Handle conn, TransactionStatus status)
 					throws Exception {
 				// Create the relation for the daily events.
+				logger.info("Attempting to create new daily relation "
+						+ getRelationName());
 				conn.createStatement(
 						"CREATE TABLE " + relation + "(" + "  CONSTRAINT pk_"
 								+ getRelationName()

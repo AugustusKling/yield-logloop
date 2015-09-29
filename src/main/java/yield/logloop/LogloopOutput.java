@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.ConnectionFactory;
@@ -27,6 +28,7 @@ import org.skife.jdbi.v2.HashPrefixStatementRewriter;
 
 import yield.core.BaseControlQueueProvider;
 import yield.core.EventListener;
+import yield.core.EventType;
 import yield.json.JsonEvent;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -152,5 +154,11 @@ public class LogloopOutput extends BaseControlQueueProvider implements
 		while (!(terminated || events.isEmpty())) {
 			terminated = indexers.awaitTermination(1, TimeUnit.SECONDS);
 		}
+	}
+
+	@Override
+	@Nonnull
+	public EventType getInputType() {
+		return new EventType(JsonEvent.class);
 	}
 }
